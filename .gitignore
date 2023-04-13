@@ -127,3 +127,13 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Ignore dynaconf secret files
+.secrets.*
+
+# ignore data files
+*.tsv
+*.csv
+
+# ignore ruff cache
+.ruff_cache/

@@ -1,0 +1,34 @@
+[tool.poetry]
+name = "clockify-etl"
+version = "0.1.0"
+description = "Clockify-ETL is a repository that contains an ETL pipeline and orchestration for collecting, parsing, and transforming Clockify timesheets for clients and consulting. It's a valuable tool for streamlining the process of time tracking and data management, making it easier and more efficient to manage consulting projects."
+authors = ["Nicholas Nadeau <nicholas.nadeau@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "clockify_etl"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+luigi = {extras = ["toml"], version = "^3.2.1"}
+pandas = "^2.0.0"
+dynaconf = "^3.1.12"
+requests = "^2.28.2"
+
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.0.261"
+black = "^23.3.0"
+isort = "^5.12.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 88
