@@ -1,0 +1,5 @@
+working_dir = "build"
+
+[data]
+timesheets_target = "timesheets.json"
+projects_target = "projects.csv"
