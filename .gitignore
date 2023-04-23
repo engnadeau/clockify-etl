@@ -130,6 +130,7 @@ dmypy.json
 
 # Ignore dynaconf secret files
 .secrets.*
+!.secrets.example.toml
 
 # ignore data files
 *.tsv
