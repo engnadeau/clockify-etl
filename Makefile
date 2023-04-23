@@ -7,7 +7,7 @@
 # PHONY Targets
 
 .PHONY: all
-all: lint
+all: secrets lint
 
 .PHONY: lint
 lint:
@@ -27,5 +27,5 @@ secrets: .secrets.toml
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # File Targets
 
-.secrets.toml: .secrets.toml.example.toml
-	cp -f .secrets.toml.example .secrets.toml
+.secrets.toml: .secrets.example.toml
+	cp -f $< $@
