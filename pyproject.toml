@@ -5,15 +5,14 @@ description = "Clockify-ETL is a repository that contains an ETL pipeline and or
 authors = ["Nicholas Nadeau <nicholas.nadeau@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "clockify_etl"}]
+packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-luigi = {extras = ["toml"], version = "^3.2.1"}
+luigi = { extras = ["toml"], version = "^3.2.1" }
 pandas = "^2.0.0"
 dynaconf = "^3.1.12"
 requests = "^2.28.2"
-
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.0.261"
