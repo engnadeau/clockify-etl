@@ -1,9 +1,7 @@
 [core]
-log_level = "DEBUG"
-logging_conf_file= "logs"
+log_level = "INFO"
 
 # LOGGING
-
 [logging]
 version = 1
 disable_existing_loggers = false
@@ -16,8 +14,8 @@ datefmt = "%Y-%m-%d %H:%M:%S"
 
 # write logs to console
 [logging.handlers.console]
-level = "DEBUG"
-class = "logging.StreamHandler"
+level = "INFO"
+class = "logging.StreamHanler"
 formatter = "simple"
 
 # luigi worker logging

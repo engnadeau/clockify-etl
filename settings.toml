@@ -1,5 +1,10 @@
+[data]
+target_fname = "timesheets"
 working_dir = "build"
 
-[data]
-timesheets_target = "timesheets.json"
-projects_target = "projects.csv"
+[logging]
+datetime_fmt = "%Y-%m-%d %H:%M:%S"
+log_level = "INFO"
+
+[clockify]
+datetime_fmt = "%Y-%m-%dT%H:%M:%SZ"
