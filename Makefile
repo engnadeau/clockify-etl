@@ -1,13 +1,10 @@
 .DEFAULT_GOAL := all
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Variables
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # PHONY Targets
 
 .PHONY: all
-all: secrets lint
+all: timesheets
 
 .PHONY: lint
 lint:
@@ -23,6 +20,18 @@ format:
 
 .PHONY: secrets
 secrets: .secrets.toml
+
+.PHONY: timesheets
+timesheets:
+	PYTHONPATH='src' \
+	poetry run \
+		luigi \
+		--module main RangeMonthly \
+		--of AllReports \
+		--local-scheduler \
+		--stop 2023-06 --reverse --months-back 3
+
+
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # File Targets

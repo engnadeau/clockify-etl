@@ -1,3 +1,5 @@
+import calendar
+import datetime
 import json
 import logging
 import math
@@ -13,27 +15,33 @@ from config import settings
 WORKING_DIR = Path(settings.data.working_dir)
 
 
-class ClockifyTimeEntries(luigi.Task):
-    date_interval = luigi.DateIntervalParameter()
+class FetchMonthlyClockifyTimeEntries(luigi.Task):
+    month_start = luigi.DateParameter(default=datetime.date.today().replace(day=1))
 
     def output(self):
-        # fname = f"{settings.data.target_fname}_{self.date_interval.start}-{self.date_interval.end}.json"
-        fname = f"{settings.data.target_fname}.json"
+        month = self.month_start.strftime("%Y-%m")
+        fname = f"{settings.data.target_fname}_{month}.json"
         path = WORKING_DIR / fname
         logging.info(f"Saving output to {path}")
         return luigi.LocalTarget(path)
 
     def run(self):
+        logging.info(f"Fetching time entries for {self.month_start}")
+        start_date = self.month_start
+        _, last_day = calendar.monthrange(self.month_start.year, self.month_start.month)
+        end_date = self.month_start.replace(day=last_day)
         json_data = clockify.get_timesheet_report(
-            start_date=str(self.date_interval.start),
-            end_date=str(self.date_interval.end),
+            start_date=start_date,
+            end_date=end_date,
         )
 
-        with self.output().open("w") as outfile:
-            json.dump(json_data, outfile)
+        local_target = self.output()
+        logging.info(f"Saving time entries to {local_target.path}")
+        with local_target.open("w") as outfile:
+            json.dump(json_data, outfile, indent=4, sort_keys=True)
 
 
-class TimeEntriesToDataFrame(luigi.Task):
+class ConvertTimeEntriesToDataFrame(luigi.Task):
     time_entries = luigi.Parameter()
 
     def output(self):
