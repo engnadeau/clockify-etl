@@ -1,9 +1,8 @@
 import calendar
-import datetime
 import json
 import logging
 import math
-from datetime import date
+import datetime
 from pathlib import Path
 
 import luigi
@@ -15,24 +14,21 @@ from config import settings
 WORKING_DIR = Path(settings.data.working_dir)
 
 
-class FetchMonthlyClockifyTimeEntries(luigi.Task):
-    month_start = luigi.DateParameter(default=datetime.date.today().replace(day=1))
+class FetchDailyTimeEntries(luigi.Task):
+    date = luigi.DateParameter(default=datetime.date.today())
 
     def output(self):
-        month = self.month_start.strftime("%Y-%m")
-        fname = f"{settings.data.target_fname}_{month}.json"
-        path = WORKING_DIR / fname
-        logging.info(f"Saving output to {path}")
+        fname = f"{settings.data.timeentries_prefix}_{self.date}.json"
+        path = WORKING_DIR / settings.data.timeentries_prefix / fname
         return luigi.LocalTarget(path)
 
     def run(self):
-        logging.info(f"Fetching time entries for {self.month_start}")
-        start_date = self.month_start
-        _, last_day = calendar.monthrange(self.month_start.year, self.month_start.month)
-        end_date = self.month_start.replace(day=last_day)
+        logging.info(f"Fetching time entries for {self.date}")
+        start = datetime.datetime.combine(self.date, datetime.time.min)
+        end = datetime.datetime.combine(self.date, datetime.time.max)
         json_data = clockify.get_timesheet_report(
-            start_date=start_date,
-            end_date=end_date,
+            start=start,
+            end=end,
         )
 
         local_target = self.output()

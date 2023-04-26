@@ -5,13 +5,11 @@ import tasks
 import toml
 import datetime
 
-# load logging config
 logging.config.dictConfig(settings.logging)
 
 
 class AllReports(luigi.WrapperTask):
-    month_start = luigi.DateParameter(default=datetime.date.today().replace(day=1))
+    date = luigi.DateParameter(default=datetime.date.today())
 
     def requires(self):
-        logging.info(f"Running pipeline for {self.month_start}...")
-        yield tasks.FetchMonthlyClockifyTimeEntries(self.month_start)
+        yield tasks.FetchDailyTimeEntries(self.date)

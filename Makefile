@@ -1,5 +1,11 @@
 .DEFAULT_GOAL := all
 
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Variables
+
+TODAY := $(shell date +%Y-%m-%d)
+DAYS_BACK := 90
+
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # PHONY Targets
 
@@ -26,12 +32,13 @@ timesheets:
 	PYTHONPATH='src' \
 	poetry run \
 		luigi \
-		--module main RangeMonthly \
+		--module main RangeDaily \
 		--of AllReports \
 		--local-scheduler \
-		--stop 2023-06 --reverse --months-back 3
-
-
+		--stop $(TODAY) \
+		--reverse \
+		--task-limit $(DAYS_BACK) \
+		--days-back $(DAYS_BACK)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # File Targets

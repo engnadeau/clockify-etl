@@ -1,6 +1,6 @@
 [data]
-target_fname = "timesheets"
 working_dir = "build"
+timeentries_prefix = "timeentries"
 rolling_days = 28
 
 [clockify]

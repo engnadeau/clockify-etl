@@ -10,16 +10,16 @@ from config import settings
 HEADERS = {"X-Api-Key": settings.clockify.api_key}
 
 
-def get_timesheet_report(start_date: datetime.date, end_date: datetime.date):
-    logging.info(f"Getting timesheet report from {start_date} to {end_date}...")
-    start_date = start_date.strftime(settings.clockify.datetime_fmt)
-    end_date = end_date.strftime(settings.clockify.datetime_fmt)
+def get_timesheet_report(start: datetime, end: datetime):
+    logging.info(f"Getting timesheet report from {start} to {end}...")
+    start = start.strftime(settings.clockify.datetime_fmt)
+    end = end.strftime(settings.clockify.datetime_fmt)
 
     # Set up the API request
     url = f"https://reports.api.clockify.me/v1/workspaces/{settings.clockify.workspace_id}/reports/detailed"
     payload = {
-        "dateRangeStart": start_date,
-        "dateRangeEnd": end_date,
+        "dateRangeStart": start,
+        "dateRangeEnd": end,
         "dateFormat": "YYYY-MM-DD",
         "detailedFilter": {"groups": ["PROJECT", "TASK"]},
         "exportType": "JSON",
