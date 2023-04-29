@@ -3,14 +3,19 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # Variables
 
+MONTHS_BACK := 3
 TODAY := $(shell date +%Y-%m-%d)
-DAYS_BACK := 90
+START_DATE := $(shell date -d "$(TODAY) -$(MONTHS_BACK) months" +%Y-%m-01)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # PHONY Targets
 
 .PHONY: all
-all: timesheets
+all: clean build
+
+.PHONY: clean
+clean:
+	-rm -rf build
 
 .PHONY: lint
 lint:
@@ -27,18 +32,13 @@ format:
 .PHONY: secrets
 secrets: .secrets.toml
 
-.PHONY: timesheets
-timesheets:
-	PYTHONPATH='src' \
+.PHONY: build
+build:
 	poetry run \
-		luigi \
-		--module main RangeDaily \
-		--of AllReports \
-		--local-scheduler \
-		--stop $(TODAY) \
-		--reverse \
-		--task-limit $(DAYS_BACK) \
-		--days-back $(DAYS_BACK)
+		python \
+		src/main.py \
+		--start-date $(START_DATE) \
+		--end-date $(TODAY)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # File Targets

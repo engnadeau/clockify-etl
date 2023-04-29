@@ -9,11 +9,12 @@ packages = [{ include = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-luigi = { extras = ["toml"], version = "^3.2.1" }
 pandas = "^2.0.0"
 dynaconf = "^3.1.12"
 requests = "^2.28.2"
-toml = "^0.10.2"
+python-slugify = "^8.0.1"
+fire = "^0.5.0"
+setuptools = "^67.7.2"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.0.261"

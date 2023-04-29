@@ -1,10 +1,16 @@
 [data]
 working_dir = "build"
-timeentries_prefix = "timeentries"
-rolling_days = 28
-
-[clockify]
-datetime_fmt = "%Y-%m-%dT%H:%M:%SZ"
+time_entries_columns = [
+    "description",
+    "projectName",
+    "clientName",
+    "timeInterval.start",
+    "timeInterval.duration",
+]
+duration_column = "timeInterval.duration"
+client_column = "clientName"
+project_column = "projectName"
+date_column = "timeInterval.start"
 
 [logging]
 version = 1
