@@ -98,6 +98,19 @@ def dump_dataframes_by_periods(dfs: List[pd.DataFrame]) -> List[pd.DataFrame]:
                 logging.info(f"Skipping empty group: {group_name.date()}")
                 continue
 
+            # append totals row
+            totals = pd.Series(
+                {
+                    settings.data.description_column: "TOTAL",
+                    settings.data.client_column: client,
+                    settings.data.project_column: project,
+                    settings.data.duration_column: group_df[
+                        settings.data.duration_column
+                    ].sum(),
+                }
+            ).to_frame().T
+            group_df = pd.concat([group_df, totals], ignore_index=True)
+
             # build path
             path = _build_output_path(
                 name_components=[slugify(client), slugify(project)],
