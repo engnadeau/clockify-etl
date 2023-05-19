@@ -7,10 +7,11 @@ time_entries_columns = [
     "timeInterval.start",
     "timeInterval.duration",
 ]
-duration_column = "timeInterval.duration"
-client_column = "clientName"
+description_column = "description"
 project_column = "projectName"
+client_column = "clientName"
 date_column = "timeInterval.start"
+duration_column = "timeInterval.duration"
 
 [logging]
 version = 1
