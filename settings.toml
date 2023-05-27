@@ -1,55 +1,12 @@
 [data]
 working_dir = "build"
-time_entries_columns = [
-    "description",
-    "projectName",
-    "clientName",
-    "timeInterval.start",
-    "timeInterval.duration",
-]
-description_column = "description"
-project_column = "projectName"
-client_column = "clientName"
-date_column = "timeInterval.start"
-duration_column = "timeInterval.duration"
+
+[data.columns]
+description = "description"
+project = "projectName"
+client = "clientName"
+datetime = "timeInterval.start"
+duration = "timeInterval.duration"
 
 [logging]
-version = 1
-disable_existing_loggers = false
-
-# logs format
-[logging.formatters.simple]
-format = "%(asctime)s %(levelname)-4s %(name)-4s %(message)s"
-datefmt = "%Y-%m-%d %H:%M:%S"
-
-# write logs to console
-[logging.handlers.console]
-level = "DEBUG"
-class = "logging.StreamHandler"
-formatter = "simple"
-
-# luigi worker logging
-[logging.loggers.root]
-handlers = ["console"]
-level = "INFO"
-
-# luigi worker logging
-[logging.loggers.luigi-interface]
-handlers = ["console"]
-level = "INFO"
-disabled = false
-propagate = false
-
-# luigid logging
-[logging.loggers.luigi]
-handlers = ["console"]
-level = "INFO"
-disabled = false
-propagate = false
-
-# luigid builded on tornado
-[logging.loggers.tornado]
-handlers = ["console"]
-level = "INFO"
-disabled = false
-propagate = false
+file_config = "logging.ini"
