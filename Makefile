@@ -1,12 +1,5 @@
 .DEFAULT_GOAL := all
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Variables
-
-MONTHS_BACK := 3
-TODAY := $(shell date +%Y-%m-%d)
-START_DATE := $(shell date -d "$(TODAY) -$(MONTHS_BACK) months" +%Y-%m-01)
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # PHONY Targets
 
@@ -34,12 +27,7 @@ secrets: .secrets.toml
 
 .PHONY: build
 build:
-	poetry run \
-		python \
-		src/main.py \
-		--start-date $(START_DATE) \
-		--end-date $(TODAY)
-
+	poetry run python src/main.py
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # File Targets
 
