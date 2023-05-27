@@ -138,3 +138,6 @@ dmypy.json
 
 # ignore ruff cache
 .ruff_cache/
+
+# ignore vscode settings
+.vscode/
