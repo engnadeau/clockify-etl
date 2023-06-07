@@ -1,7 +1,11 @@
 import datetime
-from dateutil.relativedelta import relativedelta
-from config import settings
+import logging
+
+import luigi
 import pandas as pd
+from dateutil.relativedelta import relativedelta
+
+from config import settings
 from tasks.dataframes import (
     MonthlyClientProjectDF,
     MonthlyClientProjects,
@@ -9,12 +13,6 @@ from tasks.dataframes import (
     MonthlyTimeDF,
 )
 from utils import _datetime_to_year_month
-
-
-import luigi
-
-
-import logging
 
 NUM_MONTHS = 3
 TODAY = datetime.date.today()

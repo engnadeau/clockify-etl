@@ -1,16 +1,14 @@
 import calendar
 import datetime
 import json
-import clockify
-from config import settings
-from utils import _build_output_path, _datetime_to_year_month, _time_entries_to_df
-
+import logging
 
 import luigi
 import pandas as pd
 
-
-import logging
+import clockify
+from config import settings
+from utils import _build_output_path, _datetime_to_year_month, _time_entries_to_df
 
 
 class MonthlyTimeEntries(luigi.Task):
