@@ -8,11 +8,12 @@ from dateutil.relativedelta import relativedelta
 from config import settings
 from tasks.dataframes import (
     AllTimeEntries,
-    ClientProjectTimeEntriesByMonth,
     ClientProjectSummaryByMonth,
+    ClientProjectTimeEntriesByMonth,
     ClientsByMonth,
     TimeEntriesByMonth,
 )
+from tasks.plots import PlotTimeEntriesByWeek
 from utils import _date_range_to_months, _datetime_to_year_month
 
 TODAY = datetime.date.today()
@@ -54,19 +55,13 @@ class AllReports(luigi.WrapperTask):
         # get months
         months = _date_range_to_months(start=self.start_month, end=self.end_month)
 
-        # logging.info("Generating MonthlyClients reports...")
-        yield [ClientsByMonth(month=month) for month in months]
-
-        # logging.info("Generating MonthlyClientProjects reports...")
-        yield [ClientProjectSummaryByMonth(month=month) for month in months]
-
-        # logging.info("Generating MonthlyTimeDF reports...")
-        yield [TimeEntriesByMonth(month=month) for month in months]
-
-        # logging.info("Generating MonthlyClientProjectDF reports...")
-        yield [AllClientProjectTimeEntriesByMonth(month=month) for month in months]
-
-        # logging.info("Generating MergeAllMonthlyTimeDFs...")
-        yield AllTimeEntries(
-            start_month=self.start_month, end_month=self.end_month
-        )
+        yield [
+            [ClientsByMonth(month=month) for month in months],
+            [ClientProjectSummaryByMonth(month=month) for month in months],
+            [TimeEntriesByMonth(month=month) for month in months],
+            [AllClientProjectTimeEntriesByMonth(month=month) for month in months],
+            AllTimeEntries(start_month=self.start_month, end_month=self.end_month),
+            PlotTimeEntriesByWeek(
+                start_month=self.start_month, end_month=self.end_month
+            ),
+        ]
