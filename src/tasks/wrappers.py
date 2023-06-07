@@ -7,11 +7,11 @@ from dateutil.relativedelta import relativedelta
 
 from config import settings
 from tasks.dataframes import (
-    MergeAllMonthlyTimeDFs,
-    MonthlyClientProjectDF,
-    MonthlyClientProjects,
-    MonthlyClients,
-    MonthlyTimeDF,
+    AllTimeEntries,
+    ClientProjectTimeEntriesByMonth,
+    ClientProjectSummaryByMonth,
+    ClientsByMonth,
+    TimeEntriesByMonth,
 )
 from utils import _date_range_to_months, _datetime_to_year_month
 
@@ -25,8 +25,8 @@ class AllMonthlyClientProjectDFs(luigi.WrapperTask):
 
     def requires(self):
         return {
-            "client-projects": MonthlyClientProjects(month=self.month),
-            "time-entries": MonthlyTimeDF(month=self.month),
+            "client-projects": ClientProjectSummaryByMonth(month=self.month),
+            "time-entries": TimeEntriesByMonth(month=self.month),
         }
 
     def run(self):
@@ -37,7 +37,7 @@ class AllMonthlyClientProjectDFs(luigi.WrapperTask):
         for _, row in df.iterrows():
             client = row[settings.data.columns.client]
             project = row[settings.data.columns.project]
-            yield MonthlyClientProjectDF(
+            yield ClientProjectTimeEntriesByMonth(
                 month=self.month, client=client, project=project
             )
 
@@ -55,18 +55,18 @@ class AllReports(luigi.WrapperTask):
         months = _date_range_to_months(start=self.start_month, end=self.end_month)
 
         # logging.info("Generating MonthlyClients reports...")
-        yield [MonthlyClients(month=month) for month in months]
+        yield [ClientsByMonth(month=month) for month in months]
 
         # logging.info("Generating MonthlyClientProjects reports...")
-        yield [MonthlyClientProjects(month=month) for month in months]
+        yield [ClientProjectSummaryByMonth(month=month) for month in months]
 
         # logging.info("Generating MonthlyTimeDF reports...")
-        yield [MonthlyTimeDF(month=month) for month in months]
+        yield [TimeEntriesByMonth(month=month) for month in months]
 
         # logging.info("Generating MonthlyClientProjectDF reports...")
         yield [AllMonthlyClientProjectDFs(month=month) for month in months]
 
         # logging.info("Generating MergeAllMonthlyTimeDFs...")
-        yield MergeAllMonthlyTimeDFs(
+        yield AllTimeEntries(
             start_month=self.start_month, end_month=self.end_month
         )

@@ -16,7 +16,7 @@ from utils import (
 )
 
 
-class MonthlyTimeEntries(luigi.Task):
+class RawTimeEntriesByMonth(luigi.Task):
     month = luigi.MonthParameter()
 
     def output(self):
@@ -55,11 +55,11 @@ class MonthlyTimeEntries(luigi.Task):
             json.dump(data, f, indent=4, sort_keys=True)
 
 
-class MonthlyTimeDF(luigi.Task):
+class TimeEntriesByMonth(luigi.Task):
     month = luigi.MonthParameter()
 
     def requires(self):
-        return MonthlyTimeEntries(month=self.month)
+        return RawTimeEntriesByMonth(month=self.month)
 
     def output(self):
         return luigi.LocalTarget(
@@ -93,11 +93,11 @@ class MonthlyTimeDF(luigi.Task):
         df.to_csv(output_path, index=False)
 
 
-class MonthlyClientProjects(luigi.Task):
+class ClientProjectSummaryByMonth(luigi.Task):
     month = luigi.MonthParameter()
 
     def requires(self):
-        return MonthlyTimeDF(month=self.month)
+        return TimeEntriesByMonth(month=self.month)
 
     def output(self):
         return luigi.LocalTarget(
@@ -137,13 +137,13 @@ class MonthlyClientProjects(luigi.Task):
         df.to_csv(output_path, index=False)
 
 
-class MonthlyClientProjectDF(luigi.Task):
+class ClientProjectTimeEntriesByMonth(luigi.Task):
     month = luigi.MonthParameter()
     client = luigi.Parameter()
     project = luigi.Parameter()
 
     def requires(self):
-        return MonthlyTimeDF(month=self.month)
+        return TimeEntriesByMonth(month=self.month)
 
     def output(self):
         return luigi.LocalTarget(
@@ -175,11 +175,11 @@ class MonthlyClientProjectDF(luigi.Task):
         df.to_csv(output_path, index=False)
 
 
-class MonthlyClients(luigi.Task):
+class ClientsByMonth(luigi.Task):
     month = luigi.MonthParameter()
 
     def requires(self):
-        return MonthlyTimeDF(month=self.month)
+        return TimeEntriesByMonth(month=self.month)
 
     def output(self):
         return luigi.LocalTarget(
@@ -230,13 +230,13 @@ class MonthlyClients(luigi.Task):
         df.to_csv(output_path, index=False)
 
 
-class MergeAllMonthlyTimeDFs(luigi.Task):
+class AllTimeEntries(luigi.Task):
     start_month = luigi.MonthParameter()
     end_month = luigi.MonthParameter()
 
     def requires(self):
         months = _date_range_to_months(start=self.start_month, end=self.end_month)
-        return [MonthlyTimeDF(month=month) for month in months]
+        return [TimeEntriesByMonth(month=month) for month in months]
 
     def output(self):
         return luigi.LocalTarget(
