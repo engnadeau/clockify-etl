@@ -20,7 +20,7 @@ NUM_MONTHS = 3
 START_MONTH = TODAY + relativedelta(months=-NUM_MONTHS)
 
 
-class AllMonthlyClientProjectDFs(luigi.WrapperTask):
+class AllClientProjectTimeEntriesByMonth(luigi.WrapperTask):
     month = luigi.MonthParameter()
 
     def requires(self):
@@ -64,7 +64,7 @@ class AllReports(luigi.WrapperTask):
         yield [TimeEntriesByMonth(month=month) for month in months]
 
         # logging.info("Generating MonthlyClientProjectDF reports...")
-        yield [AllMonthlyClientProjectDFs(month=month) for month in months]
+        yield [AllClientProjectTimeEntriesByMonth(month=month) for month in months]
 
         # logging.info("Generating MergeAllMonthlyTimeDFs...")
         yield AllTimeEntries(
