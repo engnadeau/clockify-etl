@@ -136,7 +136,11 @@ class MonthlyTimeDF(luigi.Task):
             data = json.load(f)
 
         # transform time entries and save to csv
-        df = _time_entries_to_df(data=data["timeentries"])
+        if data["timeentries"]:
+            df = _time_entries_to_df(data=data["timeentries"])
+        else:
+            logging.info("No time entries found")
+            df = pd.DataFrame(columns=settings.data.columns.values())
 
         # save time entries to csv
         output_path = self.output().path
