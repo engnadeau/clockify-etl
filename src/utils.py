@@ -6,6 +6,7 @@ from typing import List, Union
 
 import luigi
 import pandas as pd
+from dateutil import rrule
 from slugify import slugify
 
 from config import settings
@@ -61,3 +62,9 @@ def _time_entries_to_df(data: dict) -> pd.DataFrame:
     logging.info(f"Found {len(df)} time entries")
 
     return df
+
+
+def _date_range_to_months(
+    start: datetime.date, end: datetime.date
+) -> List[datetime.date]:
+    return [dt.date() for dt in rrule.rrule(rrule.MONTHLY, dtstart=start, until=end)]

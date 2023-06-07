@@ -3,14 +3,14 @@ import logging.config
 
 import luigi
 
-import tasks
+import tasks.wrappers
 from config import settings
 
 
 def main():
     luigi.build(
         [
-            tasks.AllReports(),
+            tasks.wrappers.AllReports(),
         ],
         local_scheduler=True,
         logging_conf_file=settings.logging.file_config,  # type: ignore
