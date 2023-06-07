@@ -8,7 +8,12 @@ import pandas as pd
 
 import clockify
 from config import settings
-from utils import _build_output_path, _datetime_to_year_month, _time_entries_to_df
+from utils import (
+    _build_output_path,
+    _date_range_to_months,
+    _datetime_to_year_month,
+    _time_entries_to_df,
+)
 
 
 class MonthlyTimeEntries(luigi.Task):
@@ -222,4 +227,40 @@ class MonthlyClients(luigi.Task):
         # save clients to csv
         output_path = self.output().path
         logging.info(f"Saving clients to {output_path}")
+        df.to_csv(output_path, index=False)
+
+
+class MergeAllMonthlyTimeDFs(luigi.Task):
+    start_month = luigi.MonthParameter()
+    end_month = luigi.MonthParameter()
+
+    def requires(self):
+        months = _date_range_to_months(start=self.start_month, end=self.end_month)
+        return [MonthlyTimeDF(month=month) for month in months]
+
+    def output(self):
+        return luigi.LocalTarget(
+            _build_output_path(
+                components=[
+                    "time-entries",
+                    str(self.start_month),
+                    str(self.end_month),
+                ],
+                extension=".csv",
+            )
+        )
+
+    def run(self):
+        # load time entries
+        df = pd.concat(
+            [pd.read_csv(input_file.path) for input_file in self.input()],
+            ignore_index=True,
+        )
+
+        # sort by date
+        df = df.sort_values(settings.data.columns.datetime)
+
+        # save time entries to csv
+        output_path = self.output().path
+        logging.info(f"Saving time entries to {output_path}")
         df.to_csv(output_path, index=False)
